@@ -1,5 +1,86 @@
 [
   {
-    "alpha": ...
+    "alpha": -1.0,
+    "beta": 1.0,
+    "gamma": 0.5,
+    "delta": 0.3,
+    "omega": 1.2,
+    "x0": 0,
+    "v0": 0,
+    "t_max": 18000,
+    "t_trans": 300,
+    "dt_per_period": 100
+  },
+    {
+    "alpha": -1.0,
+    "beta": 1.0,
+    "gamma": 0.5,
+    "delta": 0.3,
+    "omega": 1.2,
+    "x0": 0,
+    "v0": 0,
+    "t_max": 18000,
+    "t_trans": 300,
+    "dt_per_period": 100
+  },
+    {
+    "alpha": -1.0,
+    "beta": 1.0,
+    "gamma": 0.5,
+    "delta": 0.3,
+    "omega": 1.2,
+    "x0": 0,
+    "v0": 0,
+    "t_max": 18000,
+    "t_trans": 300,
+    "dt_per_period": 100
+  },
+    {
+    "alpha": -1.0,
+    "beta": 1.0,
+    "gamma": 0.5,
+    "delta": 0.3,
+    "omega": 1.2,
+    "x0": 0,
+    "v0": 0,
+    "t_max": 18000,
+    "t_trans": 300,
+    "dt_per_period": 100
+  },
+    {
+    "alpha": -1.0,
+    "beta": 1.0,
+    "gamma": 0.5,
+    "delta": 0.3,
+    "omega": 1.2,
+    "x0": 0,
+    "v0": 0,
+    "t_max": 18000,
+    "t_trans": 300,
+    "dt_per_period": 100
+  },
+    {
+    "alpha": -1.0,
+    "beta": 1.0,
+    "gamma": 0.5,
+    "delta": 0.3,
+    "omega": 1.2,
+    "x0": 0,
+    "v0": 0,
+    "t_max": 18000,
+    "t_trans": 300,
+    "dt_per_period": 100
+  },
+    {
+    "alpha": -1.0,
+    "beta": 1.0,
+    "gamma": 0.5,
+    "delta": 0.3,
+    "omega": 1.2,
+    "x0": 0,
+    "v0": 0,
+    "t_max": 18000,
+    "t_trans": 300,
+    "dt_per_period": 100
   }
 ]
