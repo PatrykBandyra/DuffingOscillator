@@ -5,12 +5,11 @@ from matplotlib import animation
 import seaborn as sb
 import tkinter as tk
 from tkinter import ttk
-import threading
 import json
 
 
-class DuffingOscillator(threading.Thread):
-    def __init__(self, alpha, beta, gamma, delta, omega, x0, v0, t_max, t_trans, dt_per_period):
+class DuffingOscillator:
+    def __init__(self, alpha, beta, gamma, delta, omega, x0, v0, t_max, t_trans, dt_per_period, gui):
         super().__init__()
         self.stop_simulation = False
 
@@ -26,6 +25,11 @@ class DuffingOscillator(threading.Thread):
         self.t_trans = t_trans
         self.dt_per_period = dt_per_period
 
+        self.gui = gui
+
+    def handle_close(self, event):
+        self.gui.on_stop_btn_clicked()
+
     def run(self):
         # Perform calculations
         x_grid = np.linspace(-1.5, 1.5, 100)
@@ -39,6 +43,7 @@ class DuffingOscillator(threading.Thread):
 
         # Creating plots
         fig, ax = plt.subplots(nrows=2, ncols=2)
+        fig.canvas.mpl_connect('close_event', self.handle_close)
 
         # Potential energy
         ax1 = ax[0, 0]
@@ -104,7 +109,7 @@ class DuffingOscillator(threading.Thread):
     def derivatives(xs, t, alpha, beta, gamma, delta, omega):
         """Returns the derivatives dx/dt and d2x/dt2"""
         x, x_dot = xs
-        x_dot_dot = -beta * x ** 3 - alpha * x - delta * x_dot + gamma * np.cos(omega * t)
+        x_dot_dot = -beta * x ** 3 + alpha * x - delta * x_dot + gamma * np.cos(omega * t)
         return x_dot, x_dot_dot
 
     @staticmethod
@@ -357,7 +362,7 @@ class Gui:
                         float(preset['t_trans'])
                         float(preset['dt_per_period'])
                     except ValueError:
-                        self.info_label['text'] = f'Found invalid data in one of presets'
+                        self.info_label['text'] = f'Found invalid data in one of the presets'
                         del data[i]
                 return data
         except FileNotFoundError:
@@ -389,7 +394,7 @@ class Gui:
                 self.start_button['state'] = tk.DISABLED
                 self.stop_button['state'] = tk.NORMAL
                 self.info_label['text'] = 'Performing calculations...'
-                self.simulation = DuffingOscillator(*data)
+                self.simulation = DuffingOscillator(*data, self)
                 self.simulation.run()
 
     def on_stop_btn_clicked(self):
