@@ -9,7 +9,7 @@ import json
 
 
 class DuffingOscillator:
-    def __init__(self, alpha, beta, gamma, delta, omega, x0, v0, t_max, t_trans, dt_per_period, gui):
+    def __init__(self, alpha, beta, gamma, delta, omega, x0, v0, t_max, t_trans, dt_per_period, gui, animation_speed):
         super().__init__()
         self.stop_simulation = False
         self.shut_down = False
@@ -28,7 +28,7 @@ class DuffingOscillator:
 
         self.gui = gui
 
-        self.animation_speed = 1
+        self.animation_speed = animation_speed
         self.i = 0
 
     def handle_close(self, event):
@@ -425,7 +425,7 @@ class Gui:
                 self.start_button['state'] = tk.DISABLED
                 self.stop_button['state'] = tk.NORMAL
                 self.info_label['text'] = 'Performing calculations...'
-                self.simulation = DuffingOscillator(*data, self)
+                self.simulation = DuffingOscillator(*data, self, int(self.animation_speed_slider.get()))
                 self.simulation.run()
 
     def on_stop_btn_clicked(self):
