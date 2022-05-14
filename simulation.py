@@ -27,6 +27,9 @@ class DuffingOscillator:
 
         self.gui = gui
 
+        self.animation_speed = 1
+        self.i = 0
+
     def handle_close(self, event):
         self.gui.on_stop_btn_clicked()
 
@@ -85,12 +88,15 @@ class DuffingOscillator:
         def animate(i):
             """Update the image for iteration i of the Matplotlib animation"""
             if not self.stop_simulation:
-                ln1.set_data(x[i], DuffingOscillator.v(x[i], self.alpha, self.beta))
-                ln2.set_data(t[:i + 1], x[:i + 1])
-                ax2.set_xlim(self.t_trans, t[i])
-                ln3.set_data(x[:i + 1], x_dot[:i + 1])
-                if not i % pstep:
-                    scat1.set_offsets(xs[i])
+                self.i += 1 * self.animation_speed
+                self.i = self.i % len(x)
+                ln1.set_data(x[self.i],
+                             DuffingOscillator.v(x[self.i], self.alpha, self.beta))
+                ln2.set_data(t[:self.i + 1], x[:self.i + 1])
+                ax2.set_xlim(self.t_trans, t[self.i])
+                ln3.set_data(x[:self.i + 1], x_dot[:self.i + 1])
+                if not self.i % pstep:
+                    scat1.set_offsets(xs[self.i])
                 return
             else:
                 plt.close(plt.gcf())
@@ -148,7 +154,7 @@ class Gui:
         self.simulation = None
         self.presets = None
         self.root = tk.Tk()
-        self.root.geometry('565x585')  # width x height
+        self.root.geometry('565x655')  # width x height
         self.root.resizable(False, False)
         self.root.title('Duffing Oscillator')
 
@@ -178,6 +184,9 @@ class Gui:
         self.tree_frame = None
         self.tree_scroll = None
         self.tree_view = None
+
+        self.animation_speed_label = None
+        self.animation_speed_slider = None
 
         self.info_label = None
         self.start_button = None
@@ -268,6 +277,11 @@ class Gui:
         self.tree_view.heading('t trans', text='t trans', anchor=tk.W)
         self.tree_view.heading('dt per period', text='dt per period', anchor=tk.W)
 
+        # Slider
+        self.animation_speed_label = tk.Label(self.root, text='Animation speed', fg='#ff0000',
+                                              font=('Arial', 10))
+        self.animation_speed_slider = tk.Scale(self.root, from_=1, to=20, orient=tk.HORIZONTAL, command=self.on_slide)
+
         # Buttons
         self.info_label = tk.Label(self.root, text='', fg='#ff0000')
         self.start_button = tk.Button(self.root, text='Start', command=self.on_start_btn_clicked)
@@ -300,9 +314,12 @@ class Gui:
         self.tree_view_info_label.grid(row=10, column=0, columnspan=2, pady=5, padx=(5, 0), sticky=tk.W + tk.E)
         self.tree_frame.grid(row=11, column=0, columnspan=2, pady=5, padx=(5, 0), sticky=tk.W + tk.E)
 
-        self.info_label.grid(row=12, column=0, columnspan=2, sticky=tk.W + tk.E, pady=5, padx=(5, 0))
-        self.start_button.grid(row=13, column=0, columnspan=2, sticky=tk.W + tk.E, pady=5, padx=(5, 0))
-        self.stop_button.grid(row=14, column=0, columnspan=2, sticky=tk.W + tk.E, pady=5, padx=(5, 0))
+        self.animation_speed_label.grid(row=12, column=0, columnspan=2, pady=(5, 0), padx=(5, 0), sticky=tk.W + tk.E)
+        self.animation_speed_slider.grid(row=13, column=0, columnspan=2, pady=(5, 0), padx=(5, 0), sticky=tk.W + tk.E)
+
+        self.info_label.grid(row=14, column=0, columnspan=2, sticky=tk.W + tk.E, pady=5, padx=(5, 0))
+        self.start_button.grid(row=15, column=0, columnspan=2, sticky=tk.W + tk.E, pady=5, padx=(5, 0))
+        self.stop_button.grid(row=16, column=0, columnspan=2, sticky=tk.W + tk.E, pady=5, padx=(5, 0))
 
         # Loading presets
         presets = self.load_presets()
@@ -313,6 +330,10 @@ class Gui:
 
         # Binding
         self.tree_view.bind('<Double-1>', self.on_preset_clicked)
+
+    def on_slide(self, animation_speed):
+        if self.simulation is not None:
+            self.simulation.animation_speed = int(animation_speed)
 
     def on_preset_clicked(self, event):
         # Clear entries
