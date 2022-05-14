@@ -31,7 +31,6 @@ class DuffingOscillator:
         self.gui.on_stop_btn_clicked()
 
     def run(self):
-        # Perform calculations
         x_grid = np.linspace(-1.5, 1.5, 100)
         v_grid = DuffingOscillator.v(x_grid, self.alpha, self.beta)
 
@@ -84,7 +83,7 @@ class DuffingOscillator:
         ax4.grid()
 
         def animate(i):
-            """Update the image for iteration i of the Matplotlib animation."""
+            """Update the image for iteration i of the Matplotlib animation"""
             if not self.stop_simulation:
                 ln1.set_data(x[i], DuffingOscillator.v(x[i], self.alpha, self.beta))
                 ln2.set_data(t[:i + 1], x[:i + 1])
