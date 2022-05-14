@@ -12,6 +12,7 @@ class DuffingOscillator:
     def __init__(self, alpha, beta, gamma, delta, omega, x0, v0, t_max, t_trans, dt_per_period, gui):
         super().__init__()
         self.stop_simulation = False
+        self.shut_down = False
 
         self.alpha = alpha
         self.beta = beta
@@ -31,7 +32,10 @@ class DuffingOscillator:
         self.i = 0
 
     def handle_close(self, event):
-        self.gui.on_stop_btn_clicked()
+        if self.shut_down:
+            plt.close(plt.gcf())
+        else:
+            self.gui.on_stop_btn_clicked()
 
     def run(self):
         x_grid = np.linspace(-1.5, 1.5, 100)
@@ -95,7 +99,7 @@ class DuffingOscillator:
                 ln2.set_data(t[:self.i + 1], x[:self.i + 1])
                 ax2.set_xlim(self.t_trans, t[self.i])
                 ln3.set_data(x[:self.i + 1], x_dot[:self.i + 1])
-                if not self.i % pstep:
+                if not i % pstep:
                     scat1.set_offsets(xs[self.i])
                 return
             else:
@@ -157,6 +161,7 @@ class Gui:
         self.root.geometry('565x655')  # width x height
         self.root.resizable(False, False)
         self.root.title('Duffing Oscillator')
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.alpha_label = None
         self.beta_label = None
@@ -197,6 +202,12 @@ class Gui:
         self.create_widgets()
 
         self.root.mainloop()
+
+    def on_close(self):
+        if self.simulation is not None:
+            self.simulation.shut_down = True
+            self.simulation.stop_simulation = True
+        self.root.destroy()
 
     def create_widgets(self):
         self.alpha_label = tk.Label(self.root, text='alpha')
